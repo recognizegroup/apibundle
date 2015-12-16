@@ -1,0 +1,17 @@
+services:
+    kernel.event_listener.json_api_request_transformer:
+        class: Recognize\ApiBundle\EventListener\JsonRequestTransformerListener
+        tags:
+            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 100 }
+        arguments:
+            - @recognize.json_schema_validator
+
+    recognize.json_annotation_listener:
+        class: Recognize\ApiBundle\EventListener\JSONAnnotationSubscriber
+        tags:
+            - { name: kernel.event_subscriber }
+        arguments:
+            - @annotation_reader
+            - @logger
+            - @recognize.json_schema_validator
+            - %kernel.environment%

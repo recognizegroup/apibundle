@@ -1,0 +1,33 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "Test write request",
+  "description": "The default schema for a create request",
+  "type": "object",
+  "allOf": [
+    {
+      "$ref": "#/jsonapi/create_request"
+    },
+    {
+      "type": "object",
+      "properties": {
+        "data": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "enum": [ "test" ]
+            },
+            "attributes": {
+              "type": "object",
+              "properties": {
+                "name": { "type": "string" }
+              },
+              "required": ["name"]
+            }
+          },
+          "required": ["type", "attributes"]
+        }
+      }
+    }
+  ]
+}

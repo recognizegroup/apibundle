@@ -1,0 +1,14 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "Write request",
+  "description": "The default schema for a create request",
+  "type": "object",
+  "oneOf": [
+    {
+      "$ref": "#/jsonapi/create_request"
+    },
+    {
+      "$ref": "#/jsonapi/update_relationship_request"
+    }
+  ]
+}

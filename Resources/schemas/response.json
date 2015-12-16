@@ -1,0 +1,14 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "Response",
+  "description": "The default schema for a JSONAPI response",
+  "type": "object",
+  "oneOf": [
+    {
+      "$ref": "#/jsonapi/resource_response"
+    },
+    {
+      "$ref": "#/jsonapi/collection_response"
+    }
+  ]
+}

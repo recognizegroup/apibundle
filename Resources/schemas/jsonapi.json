@@ -1,0 +1,195 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "jsonapi": {
+    "resource_identifier": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "type"
+      ]
+    },
+    "resource_object": {
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/jsonapi/resource_identifier"
+        },
+        {
+          "properties": {
+            "attributes": {
+              "type": "object"
+            },
+            "relationships": {
+              "type": "object"
+            }
+          },
+          "required": [
+            "attributes"
+          ]
+        }
+      ]
+    },
+    "created_resource_object": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string"
+        },
+        "attributes": {
+          "type": "object"
+        },
+        "relationships": {
+          "type": "object"
+        }
+      },
+      "required": [
+        "type"
+      ]
+    },
+    "base_response": {
+      "type": "object",
+      "properties": {
+        "included": {
+          "type": "array",
+          "items": {
+            "$ref": "#/jsonapi/resource_object"
+          },
+          "minItems": 0
+        },
+        "meta": {
+          "type": "object"
+        },
+        "links": {
+          "type": "object"
+        }
+      }
+    },
+    "resource_response": {
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/jsonapi/base_response"
+        },
+        {
+          "properties": {
+            "data": {
+              "type": {
+                "$ref": "#/jsonapi/resource_object"
+              }
+            }
+          },
+          "required": [
+            "data"
+          ]
+        }
+      ]
+    },
+    "collection_response": {
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/jsonapi/base_response"
+        },
+        {
+          "properties": {
+            "data": {
+              "type": "array",
+              "items": {
+                "$ref": "#/jsonapi/resource_object"
+              },
+              "minItems": 0
+            }
+          },
+          "required": [
+            "data"
+          ]
+        }
+      ]
+    },
+    "create_request": {
+      "type": "object",
+      "properties": {
+        "data": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "type": {
+              "type": "string"
+            },
+            "attributes": {
+              "type": "object"
+            },
+            "relationships": {
+              "type": "object",
+              "patternProperties": {
+                "^[a-z]+$": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": {
+                        "$ref": "#/jsonapi/resource_identifier"
+                      }
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "required": [
+            "type",
+            "attributes"
+          ]
+        }
+      },
+      "required": ["data"]
+    },
+    "update_relationship_request": {
+      "type": "object",
+      "properties": {
+        "data": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "type": {
+              "type": "string"
+            },
+            "attributes": {
+              "type": "object"
+            },
+            "relationships": {
+              "type": "object",
+              "patternProperties": {
+                "^[a-z]+$": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": {"$ref": "#/jsonapi/resource_identifier" }
+                    }
+                  },
+                  "required": ["data"]
+                }
+              }
+            }
+          },
+          "required": ["id", "type", "relationship"]
+        }
+      },
+      "required": ["data"]
+    }
+  }
+}
