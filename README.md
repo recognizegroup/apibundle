@@ -7,6 +7,14 @@ Features include:
 * Transforming JSON requests into a working ParameterBag
 * JsonSchema validation for JSONAPI
 * Enforces JSONAPI when using the JSONAPIResponse annotation
+* Allows filter, sort and include queries with the JsonApiRepositoryTrait
+
+Supported JSONAPI query parameters include:
+* filter[field][eq]=test         - Equality checking if the field is equal to test
+* filter[field][in]=test,nottest - Check if the field is either test or nottest
+* filter[field][range]=0,100     - Range checking if the field is between 0 and 100
+* sort=field1,-field2            - Sorting field1 ascending and field2 descending
+* includes=field3,field3.field4  - Query the database for the field3 association and the field3.field4 association
 
 Installation
 -----------
@@ -184,3 +192,38 @@ In this example, we can use the reference '#/definitions/name' in our json schem
   ]
 }
 ```
+
+Clientside queries using sort, filter and include query parameters
+------------------------
+
+To allow the client to query using JSONAPI standards, you can add the JsonApiRepositoryTrait to your EntityRepository.
+
+```php
+class ExampleRepository extends EntityRepository implements JsonApiRepositoryInterface
+{
+    use JsonApiRepositoryTrait;
+    
+}
+```
+
+This exposes a jsonApiQuery method that returns a collection of items the client has requested.
+You must always set the fields the client is allowed to query for security reasons. 
+If fields aren't exposed, queries based on them will not be executed.
+
+```php
+class ExampleController extends Controller {
+
+  /** @var ExampleRepository $exampleRepo */
+  protected $exampleRepo;
+
+  public function indexAction( Request $request ){
+      return $exampleRepo->jsonApiQuery( $request, array( "name", "date" ) );
+  }
+
+}
+```
+
+This example allows the client to sort or query the name and date fields.
+
+As of right now, the include query does query the database for the relationships, but they aren't added to the response yet.
+
