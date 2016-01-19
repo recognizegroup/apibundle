@@ -36,32 +36,22 @@ trait JsonApiRepositoryTrait {
      * @return mixed
      */
     public function jsonApiQuery( Request $request, $exposed_fields = array(), $additional_criteria = array() ){
-        $container = JsonApiQueryParser::parseParameterBag( $request->query );
-
-        // Add the additional criteria - Works like the findBy method
-        foreach( $additional_criteria as $field => $value ){
-            if( is_array( $value ) ){
-                if( array_key_exists("in", $container ) == false ){
-                    $container['in'] = array();
-                }
-
-                $container['in'][ $field ] = $value;
-            } else {
-                if( array_key_exists("eq", $container ) == false ){
-                    $container['eq'] = array();
-                }
-
-                $container['eq'][ $field ] = $value;
-            }
-        }
-
         if( empty($exposed_fields ) ){
             $exposed_fields = $this->exposed_query_fields;
         }
 
+        $container = JsonApiQueryParser::parseParameterBag( $request->query );
         $jqb = new JsonApiQueryBuilder( $this->_em, $this->_entityName );
         $dqb = $jqb->generateDoctrineQueryBuilder( $container, $exposed_fields );
 
+        // Add the additional criteria - Works like the findBy method
+        if( empty( $additional_criteria ) == false ) {
+            foreach( $additional_criteria as $key => $value ){
+                $dqb->where( "entity." . $key . " = :additional_" . $key  );
+                $dqb->setParameter("additional_" . $key, $value );
+            }
+        }
+        
         return $dqb->getQuery()->getResult();
     }
 
