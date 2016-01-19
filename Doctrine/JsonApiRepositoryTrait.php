@@ -60,7 +60,7 @@ trait JsonApiRepositoryTrait {
         }
 
         $jqb = new JsonApiQueryBuilder( $this->_em, $this->_entityName );
-        $dqb = $jqb->generateDoctrineQueryBuilder( $container, $this->exposed_query_fields );
+        $dqb = $jqb->generateDoctrineQueryBuilder( $container, $exposed_fields );
 
         return $dqb->getQuery()->getResult();
     }
