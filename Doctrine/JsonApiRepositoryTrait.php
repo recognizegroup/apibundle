@@ -47,7 +47,7 @@ trait JsonApiRepositoryTrait {
         // Add the additional criteria - Works like the findBy method
         if( empty( $additional_criteria ) == false ) {
             foreach( $additional_criteria as $key => $value ){
-                $dqb->where( "entity." . $key . " = :additional_" . $key  );
+                $dqb->andWhere( "entity." . $key . " = :additional_" . $key  );
                 $dqb->setParameter("additional_" . $key, $value );
             }
         }
