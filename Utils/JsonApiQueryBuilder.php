@@ -63,6 +63,12 @@ class JsonApiQueryBuilder {
                                 $qb->setParameter($parameter_key, $value );
                             }
                             break;
+                        case "search":
+                            if( empty( $value ) == false ){
+                                $where_queries[] = $querykey . ' LIKE :' . $parameter_key;
+                                $qb->setParameter($parameter_key, '%' . $value . '%');
+                            }
+                            break;
                         case "in":
                             if( empty( $value ) == false ){
                                 $where_queries[] = $querykey . ' IN(:' . $parameter_key . ")";

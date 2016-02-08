@@ -65,6 +65,14 @@ class JsonApiQueryParser {
         foreach( $filter as $field => $values ){
             foreach( $values as $type => $value ){
                 switch( $type ){
+                    case "search":
+                        if( array_key_exists( "search", $filtercomponents ) == false ){
+                            $filtercomponents[ "search" ] = array();
+                        }
+
+                        $filtercomponents[ "search" ][ $field ] = $value;
+
+                        break;
                     case "eq":
                         if( array_key_exists( "eq", $filtercomponents ) == false ){
                             $filtercomponents[ "eq" ] = array();

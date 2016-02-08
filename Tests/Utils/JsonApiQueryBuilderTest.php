@@ -49,6 +49,23 @@ class JsonApiQueryBuilderTest extends PHPUnit_Framework_TestCase
         );
     }
 
+    public function testSearchQuery(){
+        $qb = $this->getQueryBuilder();
+
+        $dqb = $qb->generateDoctrineQueryBuilder( array(
+            "search" => array(
+                "field1" => "test",
+            )
+        ), array( "field1" )
+        );
+
+        $this->assertEquals(
+            "SELECT entity FROM Recognize\ApiBundle\Tests\Mocks\MockPrimaryEntity entity "
+            . "WHERE entity.field1 LIKE :search_field1", $dqb->getDQL()
+        );
+    }
+
+
     public function testInQuery(){
         $qb = $this->getQueryBuilder();
 

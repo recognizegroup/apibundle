@@ -10,6 +10,7 @@ Features include:
 * Allows filter, sort and include queries with the JsonApiRepositoryTrait
 
 Supported JSONAPI query parameters include:
+* filter[field][search]=test     - Equality checking if the field contains the string test
 * filter[field][eq]=test         - Equality checking if the field is equal to test
 * filter[field][in]=test,nottest - Check if the field is either test or nottest
 * filter[field][range]=0,100     - Range checking if the field is between 0 and 100

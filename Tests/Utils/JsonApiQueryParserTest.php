@@ -82,6 +82,24 @@ class JsonApiQueryParserTest extends PHPUnit_Framework_TestCase
         ), $container );
     }
 
+    public function testFilterSearch(){
+        $bag = new ParameterBag(
+            array(
+                "filter" =>array(
+                    "name" => array(
+                        "search" => "test"
+                    )
+                )
+            )
+        );
+
+        $container = JsonApiQueryParser::parseParameterBag( $bag );
+        $this->assertEquals( array(
+            "search" => array( 'name' => "test" )
+        ), $container );
+    }
+
+
 
     public function testIncludes(){
         $bag = new ParameterBag(
