@@ -113,7 +113,9 @@ class JSONAnnotationSubscriber implements EventSubscriberInterface {
      */
     protected function validateJsonApiRequest( Request $request ){
         $hasRequestData = strlen( $request->getContent() ) > 0;
-        if( $hasRequestData && $request->headers->get("Content-Type") !== JsonApi::CONTENT_TYPE ){
+
+        // Handles Firefox content-type BS
+        if( $hasRequestData && strpos( $request->headers->get("Content-Type"), JsonApi::CONTENT_TYPE ) === 0 ){
             throw new BadRequestHttpException("Content type not accepted - Use " . JsonApi::CONTENT_TYPE );
         }
     }
