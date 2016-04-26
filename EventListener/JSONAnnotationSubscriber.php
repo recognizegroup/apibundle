@@ -115,8 +115,11 @@ class JSONAnnotationSubscriber implements EventSubscriberInterface {
         $hasRequestData = strlen( $request->getContent() ) > 0;
 
         // Handles Firefox content-type BS
-        if( $hasRequestData && strpos( $request->headers->get("Content-Type"), JsonApi::CONTENT_TYPE ) === 0 ){
-            throw new BadRequestHttpException("Content type not accepted - Use " . JsonApi::CONTENT_TYPE );
+        if( $hasRequestData ){
+            $positionOfContentType = strpos( $request->headers->get("Content-Type"), JsonApi::CONTENT_TYPE );
+            if( $positionOfContentType === -1 || $positionOfContentType === false ) {
+                throw new BadRequestHttpException("Content type " . $request->headers->get("Content-Type") . " not accepted - Use " . JsonApi::CONTENT_TYPE);
+            }
         }
     }
 
