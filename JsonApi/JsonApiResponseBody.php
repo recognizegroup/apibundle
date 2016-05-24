@@ -31,8 +31,8 @@ class JsonApiResponseBody implements \JsonSerializable {
      *
      * @url http://jsonapi.org/format/#document-resource-identifier-objects
      */
-    public function getRelationshipIdentifiers(){
-        $relationships = $this->getRelationships();
+    public function getRelationshipIdentifiers( $resource ){
+        $relationships = $this->getRelationships( $resource );
 
         if( !empty( $relationships ) ) {
             $rids = array();
@@ -60,7 +60,7 @@ class JsonApiResponseBody implements \JsonSerializable {
      * @return array
      */
     public function getIncludedResources(){
-        $relationships = $this->getRelationships();
+        $relationships = $this->getRelationships( null );
 
         $resources = array();
         if( !empty( $relationships ) ) {
@@ -117,7 +117,7 @@ class JsonApiResponseBody implements \JsonSerializable {
                 // As PHPs implementations array unique doesnt handle nested arrays well,
                 // we have to serialize the arrays first before getting the unique values
                 $responsedata['included'] =
-                    array_map("unserialize", array_unique(array_map("serialize", $includedResources)));
+                    array_values( array_map("unserialize", array_unique(array_map("serialize", $includedResources))) );
             }
         }
 
@@ -139,7 +139,7 @@ class JsonApiResponseBody implements \JsonSerializable {
                 "attributes" => $resource->getAttributes()
             );
 
-            $relationships = $this->getRelationshipIdentifiers();
+            $relationships = $this->getRelationshipIdentifiers( $resource );
             if( $relationships !== false ){
                 $data['relationships'] = $relationships;
             }
@@ -169,14 +169,18 @@ class JsonApiResponseBody implements \JsonSerializable {
     /**
      * @return array
      */
-    protected function getRelationships(){
-        if( $this->is_single_resource ){
-            $relationships = $this->resources[0]->getRelationships();
+    protected function getRelationships( $resource ){
+        if( $resource instanceof ResourceObjectInterface ){
+            $relationships = $resource->getRelationships();
         } else {
-            $relationships  = array();
-            foreach( $this->resources as $resource ){
-                foreach( $resource->getRelationships() as $key => $relationship ){
-                    $relationships[ $key ] = $relationship;
+            if( $this->is_single_resource ){
+                $relationships = $this->resources[0]->getRelationships();
+            } else {
+                $relationships  = array();
+                foreach( $this->resources as $resource ){
+                    foreach( $resource->getRelationships() as $key => $relationship ){
+                        $relationships[ $key ][] = $relationship;
+                    }
                 }
             }
         }
