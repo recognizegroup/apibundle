@@ -90,7 +90,15 @@ class JsonApiResponseBody implements \JsonSerializable {
             }
         }
 
-        return $resources;
+        // Clear empty resources
+        $cleanResources = array();
+        foreach( $resources as $resource ){
+            if( empty( $resource ) == false ){
+                $cleanResources[] = $resource;
+            }
+        }
+
+        return $cleanResources;
     }
 
     /**
@@ -113,6 +121,8 @@ class JsonApiResponseBody implements \JsonSerializable {
         if( $with_included_resources == true ){
             $includedResources = $this->getIncludedResources();
             if( !empty( $includedResources ) ){
+
+
 
                 // As PHPs implementations array unique doesnt handle nested arrays well,
                 // we have to serialize the arrays first before getting the unique values
@@ -144,6 +154,10 @@ class JsonApiResponseBody implements \JsonSerializable {
                 $data['relationships'] = $relationships;
             }
 
+            if( is_array( $data['relationships'] ) && empty( $data['relationships']) ){
+                $data['relationships'] = new \stdClass();
+            }
+
             $resourceobjects[] = $data;
         }
 
@@ -172,6 +186,11 @@ class JsonApiResponseBody implements \JsonSerializable {
     protected function getRelationships( $resource ){
         if( $resource instanceof ResourceObjectInterface ){
             $relationships = $resource->getRelationships();
+
+            // Make sure the relationships are always an object
+            if( count( $relationships ) == 0 ){
+                $relationships = new \stdClass();
+            }
         } else {
             if( $this->is_single_resource ){
                 $relationships = $this->resources[0]->getRelationships();
@@ -181,6 +200,11 @@ class JsonApiResponseBody implements \JsonSerializable {
                     foreach( $resource->getRelationships() as $key => $relationship ){
                         $relationships[ $key ][] = $relationship;
                     }
+                }
+
+                // Make sure the relationships are always an object
+                if( count( $relationships ) == 0 ){
+                    $relationships = new \stdClass();
                 }
             }
         }
