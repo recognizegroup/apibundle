@@ -87,9 +87,12 @@ class JSONAnnotationSubscriber implements EventSubscriberInterface {
         // Do a simple transformation of the controller data
         // Put the controller data through json decoding to make sure JSON decoding interfaces work properly
         $result = json_decode( json_encode( $event->getControllerResult() ) );
-        if($result === null || count($result) < 1) {
+        if($result === null || $result instanceof \stdClass == false) {
             $result = "";
-        }
+        }/* else if( count($result) < 1 ){
+            $result = "";
+        }*/
+
         // Skip validation if we use the simple JSONResponse annotation
         if( $isSimpleJson ){
             if( $result == "" ){
