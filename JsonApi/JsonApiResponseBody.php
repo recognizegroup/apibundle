@@ -198,9 +198,11 @@ class JsonApiResponseBody implements \JsonSerializable {
                 $relationships = $this->resources[0]->getRelationships();
             } else {
                 $relationships  = array();
-                foreach( $this->resources as $resource ){
-                    foreach( $resource->getRelationships() as $key => $relationship ){
-                        $relationships[ $key ][] = $relationship;
+                if( is_array( $this->resources ) ){
+                    foreach( $this->resources as $resource ){
+                        foreach( $resource->getRelationships() as $key => $relationship ){
+                            $relationships[ $key ][] = $relationship;
+                        }
                     }
                 }
 
