@@ -142,27 +142,29 @@ class JsonApiResponseBody implements \JsonSerializable {
     public function getSimpleResourceObject( ){
 
         $resourceobjects = array();
-        foreach( $this->resources as $resource ){
-            $data = array(
-                "id" => "" . $resource->getId(),
-                "type" => $resource->getResourceType(),
-                "attributes" => $resource->getAttributes()
-            );
+        if( is_array( $this->resources ) ){
+            foreach( $this->resources as $resource ){
+                $data = array(
+                    "id" => "" . $resource->getId(),
+                    "type" => $resource->getResourceType(),
+                    "attributes" => $resource->getAttributes()
+                );
 
-            $relationships = $this->getRelationshipIdentifiers( $resource );
-            if( $relationships !== false ){
-                $data['relationships'] = $relationships;
+                $relationships = $this->getRelationshipIdentifiers( $resource );
+                if( $relationships !== false ){
+                    $data['relationships'] = $relationships;
+                }
+
+                if( is_array( $data['relationships'] ) && empty( $data['relationships']) ){
+                    $data['relationships'] = new \stdClass();
+                }
+
+                $resourceobjects[] = $data;
             }
 
-            if( is_array( $data['relationships'] ) && empty( $data['relationships']) ){
-                $data['relationships'] = new \stdClass();
+            if( $this->is_single_resource ){
+                $resourceobjects = $resourceobjects[0];
             }
-
-            $resourceobjects[] = $data;
-        }
-
-        if( $this->is_single_resource ){
-            $resourceobjects = $resourceobjects[0];
         }
 
         return $resourceobjects;
@@ -196,9 +198,11 @@ class JsonApiResponseBody implements \JsonSerializable {
                 $relationships = $this->resources[0]->getRelationships();
             } else {
                 $relationships  = array();
-                foreach( $this->resources as $resource ){
-                    foreach( $resource->getRelationships() as $key => $relationship ){
-                        $relationships[ $key ][] = $relationship;
+                if( is_array( $this->resources ) ){
+                    foreach( $this->resources as $resource ){
+                        foreach( $resource->getRelationships() as $key => $relationship ){
+                            $relationships[ $key ][] = $relationship;
+                        }
                     }
                 }
 
