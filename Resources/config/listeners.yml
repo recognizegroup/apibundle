@@ -14,4 +14,4 @@ services:
             - "@annotation_reader"
             - "@logger"
             - "@recognize.json_schema_validator"
-            - %kernel.environment%
+            - '%kernel.environment%'
