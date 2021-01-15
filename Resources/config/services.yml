@@ -1,5 +1,4 @@
 services:
-    recognize.json_schema_validator:
-        class:      Recognize\ApiBundle\Validator\JsonApiSchemaValidator
+    Recognize\ApiBundle\Validator\JsonApiSchemaValidator:
         arguments:
-            - '%recognize_api.config%'
+            $config: '%recognize_api.config%'
