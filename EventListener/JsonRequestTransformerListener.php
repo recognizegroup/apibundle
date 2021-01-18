@@ -26,7 +26,7 @@ class JsonRequestTransformerListener
     /**
      * @param GetResponseEvent $event
      */
-    public function onKernelRequest(GetResponseEvent $event)
+    public function __invoke(GetResponseEvent $event)
     {
         $request = $event->getRequest();
 

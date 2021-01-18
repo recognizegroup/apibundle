@@ -1,4 +1,17 @@
 services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+        public: false
+
+    Recognize\ApiBundle\EventListener\JsonRequestTransformerListener:
+        tags:
+            - { name: kernel.event_listener }
+
     Recognize\ApiBundle\Validator\JsonApiSchemaValidator:
         arguments:
             $config: '%recognize_api.config%'
+
+    Recognize\ApiBundle\EventListener\JSONAnnotationSubscriber:
+        tags:
+            - { name: kernel.event_listener }

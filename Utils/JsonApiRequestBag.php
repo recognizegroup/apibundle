@@ -18,7 +18,12 @@ class JsonApiRequestBag {
     protected $data_object;
 
     public function __construct( Request $request ){
-        $this->data_object = $request->request->get("data", null);
+        $requestData = json_encode($request->getContent(), true);
+        if (array_key_exists('data', $requestData)) {
+            $this->data_object = $requestData['data'];
+        } else {
+            $this->data_object = null;
+        }
     }
 
     /**

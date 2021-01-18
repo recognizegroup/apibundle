@@ -36,14 +36,12 @@ class JSONAnnotationSubscriber implements EventSubscriberInterface {
 
     protected $validator;
 
-    public function __construct(Reader $reader, LoggerInterface $logger, JsonApiSchemaValidator $jsonSchemaValidator, $environment) {
+    public function __construct(Reader $reader, LoggerInterface $logger, JsonApiSchemaValidator $jsonSchemaValidator) {
         $this->reader = $reader;
         $this->logger = $logger;
         $this->validator = $jsonSchemaValidator;
 
-        if( $environment !== "prod"){
-            $this->verbose_environment = true;
-        }
+        $this->verbose_environment = true;
     }
 
     /**
